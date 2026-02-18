@@ -9,6 +9,11 @@
   --kc-text-muted: #6c757d;
   --kc-input-bg: rgba(255, 255, 255, 0.95);
   --kc-product-grid-cols: 4;
+  --kc-product-min: 180px;
+  --kc-product-padding: 12px;
+  --kc-product-title-size: 20px;
+  --kc-product-price-size: 17px;
+  --kc-product-stock-size: 15px;
 }
 
 * {
@@ -20,7 +25,8 @@ body {
   font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--kc-bg);
   color: var(--kc-text-main);
-  font-size: 19.5px;
+  /* use a more standard base font-size so mobile renders at expected scale */
+  font-size: 16px;
 }
 
 .app-root {
@@ -38,6 +44,14 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border-left: 4px solid var(--kc-green);
   color: var(--kc-text-main);
+}
+
+/* Make cards fluid and centered so they fill available width on mobile */
+.kc-main > .kc-glass-card,
+.kc-glass-card[data-fluid="true"] {
+  width: calc(100% - 32px);
+  max-width: 1100px;
+  margin: 12px auto;
 }
 
 .kc-auth-card {
@@ -117,12 +131,16 @@ header.kc-navbar {
   -webkit-backdrop-filter: blur(12px);
   background: var(--kc-green);
   color: #ffffff;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: auto;
 }
 
 .kc-nav-left {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: auto;
 }
 
 .kc-logo {
@@ -151,6 +169,69 @@ header.kc-navbar {
   gap: 10px;
   align-items: center;
 }
+
+/* Responsive product grid used by Beranda and Kasir pages */
+.kc-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--kc-product-min), 1fr));
+  gap: 12px;
+}
+
+.kc-product-card {
+  padding: var(--kc-product-padding);
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #ffffff;
+  border-left: 4px solid var(--kc-green);
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.kc-product-title {
+  font-weight: 600;
+  font-size: var(--kc-product-title-size);
+  margin-bottom: 4px;
+  color: #212529;
+}
+
+.kc-product-price {
+  font-size: var(--kc-product-price-size);
+  color: #6c757d;
+}
+
+.kc-product-stock {
+  font-size: var(--kc-product-stock-size);
+  color: #212223ff;
+  margin-bottom: 8px;
+}
+
+.kc-product-cta {
+  width: 100%;
+}
+
+/* Floating cart button */
+.kc-floating-cart {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--kc-green-light), var(--kc-green));
+  box-shadow: 0 10px 24px rgba(0,0,0,0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+/* Responsive adjustments for product cards and floating cart */
 
 .kc-nav-links a {
   color: rgba(255, 255, 255, 0.9);
@@ -202,6 +283,10 @@ main.kc-main {
     font-size: 16px;
   }
 
+  :root {
+    --kc-product-grid-cols: 3;
+  }
+
   .kc-auth-card {
     max-width: 90%;
     padding: 20px 16px 16px;
@@ -225,20 +310,32 @@ main.kc-main {
     padding: 14px;
   }
 
+  .kc-nav-links {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* slightly tighter navbar padding on mid-size phones to avoid horizontal overflow */
+  header.kc-navbar {
+    padding: 6px 10px;
+  }
+
   .kc-nav-links a {
-    font-size: 16px;
+    font-size: 13px;
+    padding: 3px 6px;
   }
 
   .kc-app-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .kc-nav-user {
-    font-size: 14px;
+    font-size: 12px;
+    margin-left: 6px;
   }
 
   .kc-nav-logout {
-    font-size: 14px;
+    font-size: 12px;
     padding: 6px 10px;
   }
 
@@ -248,6 +345,14 @@ main.kc-main {
 
   .kc-glass-card {
     padding: 12px;
+  }
+
+  header.kc-navbar {
+    padding: 8px 12px;
+  }
+
+  .kc-logo-sm {
+    height: 30px;
   }
 }
 
@@ -282,20 +387,27 @@ main.kc-main {
     padding: 12px;
   }
 
+  .kc-nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .kc-nav-links a {
-    font-size: 14px;
+    font-size: 12px;
+    padding: 3px 6px;
   }
 
   .kc-app-title {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .kc-nav-user {
-    font-size: 12px;
+    display: none;
   }
 
   .kc-nav-logout {
-    font-size: 12px;
+    font-size: 11px;
     padding: 4px 8px;
   }
 
@@ -308,13 +420,91 @@ main.kc-main {
   }
 
   .kc-logo-sm {
-    height: 28px;
+    height: 26px;
+  }
+
+  header.kc-navbar {
+    padding: 6px 10px;
+  }
+}
+
+/* Ensure nav wraps cleanly on slightly larger phones as well */
+@media (max-width: 900px) {
+  .kc-nav-links {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  header.kc-navbar {
+    padding: 8px 12px;
   }
 }
 
 @media (max-width: 360px) {
   :root {
     --kc-product-grid-cols: 1;
+  }
+
+  .kc-app-title {
+    font-size: 14px;
+  }
+
+  .kc-nav-links a {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+
+  .kc-logo-sm {
+    height: 24px;
+  }
+
+  header.kc-navbar {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 900px) {
+  .kc-nav-links {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  header.kc-navbar {
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --kc-product-min: 140px;
+    --kc-product-padding: 10px;
+    --kc-product-title-size: 18px;
+    --kc-product-price-size: 15px;
+    --kc-product-stock-size: 13px;
+  }
+
+  .kc-floating-cart {
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --kc-product-min: 120px;
+    --kc-product-padding: 8px;
+    --kc-product-title-size: 16px;
+    --kc-product-price-size: 14px;
+    --kc-product-stock-size: 12px;
+  }
+
+  .kc-floating-cart {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+    right: 10px;
+    bottom: 10px;
   }
 }
 

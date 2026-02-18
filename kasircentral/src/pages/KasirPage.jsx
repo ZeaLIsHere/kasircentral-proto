@@ -19,48 +19,30 @@ function KasirPage() {
     const loadProducts = async () => {
       try {
         const snap = await getDocs(collection(db, 'products'))
-        const list = []
-        snap.forEach((d) => list.push({ id: d.id, ...d.data() }))
-        setProducts(list.filter((p) => p.isActive !== false))
-      } catch (e) {
-        console.error(e)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadProducts()
-  }, [])
-
-  const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id)
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, qty: item.qty + 1 }
-            : item,
-        )
-      }
-      return [...prev, { ...product, qty: 1 }]
-    })
-  }
-  
-  useEffect(() => {
-    if (!products.length) return
-
-    const addProductId = location.state?.addProductId
-    if (!addProductId) return
-
-    const product = products.find((p) => p.id === addProductId)
-    if (product) {
-      addToCart(product)
-    }
-
-    navigate(location.pathname, { replace: true, state: {} })
-  }, [products, location, navigate])
-
-  const updateQty = (id, qty) => {
-    setCart((prev) =>
+        <div className="kc-product-grid">
+          {products.map((p) => (
+            <div
+              key={p.id}
+              className="kc-product-card"
+              role="button"
+              onClick={() => addToCart(p)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="kc-product-title">{p.name}</div>
+              <div className="kc-product-price">Rp {p.price.toLocaleString('id-ID')}</div>
+              <div className="kc-product-stock">Stok: {p.stock}</div>
+              <button
+                className="kc-nav-logout kc-product-cta"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  addToCart(p)
+                }}
+              >
+                Beli sekarang
+              </button>
+            </div>
+          ))}
+        </div>
       prev.map((item) =>
         item.id === id
           ? { ...item, qty: qty < 1 ? 1 : qty }
@@ -151,13 +133,7 @@ function KasirPage() {
         </div>
 
         <h3 style={{ margin: '4px 0 8px' }}>Daftar Produk</h3>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(var(--kc-product-grid-cols), 1fr)',
-            gap: 12,
-          }}
-        >
+        <div className="kc-product-grid">
           {products.map((p) => (
             <button
               key={p.id}

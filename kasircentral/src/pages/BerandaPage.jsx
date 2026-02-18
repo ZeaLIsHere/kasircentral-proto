@@ -71,47 +71,21 @@ function BerandaPage() {
     <main className="kc-main">
       <div className="kc-glass-card" style={{ padding: 16 }}>
         <h2 style={{ marginTop: 0 }}>Beranda</h2>
-        {kosong ? (
-          <div style={{ textAlign: 'center', padding: '20px 0' }}>
-            <div style={{ marginBottom: 12 }}>Belum ada produk yang terdaftar.</div>
-            <button className="kc-button-primary" style={{ maxWidth: 220 }} onClick={handleOpenTambahProduk}>
-              Tambah produk pertama
-            </button>
-          </div>
-        ) : (
-          <>
-            <div style={{ marginBottom: 10, fontSize: 17, display: 'flex', justifyContent: 'space-between' }}>
-              <span>Pilih produk untuk ditambahkan cepat ke keranjang di halaman kasir.</span>
-              <button
-                className="kc-nav-logout"
-                style={{ padding: '6px 12px' }}
-                onClick={handleOpenTambahProduk}
-              >
-                + Tambah produk
-              </button>
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(var(--kc-product-grid-cols), 1fr)',
-                gap: 12,
-              }}
-            >
+            <div className="kc-product-grid">
               {products.map((p) => (
-                <div
-                  key={p.id}
-                  style={{
-                    padding: 10,
-                    borderRadius: 12,
-                    border: '1px solid rgba(0,0,0,0.08)',
-                    background: '#ffffff',
-                    borderLeft: '4px solid var(--kc-green)',
-                    minHeight: 120,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                  }}
-                >
+                <div key={p.id} className="kc-product-card">
+                  <div className="kc-product-title">{p.name}</div>
+                  <div className="kc-product-price">Rp {p.price.toLocaleString('id-ID')}</div>
+                  <div className="kc-product-stock">Stok: {p.stock}</div>
+                  <button
+                    className="kc-nav-logout kc-product-cta"
+                    onClick={() => handleTambahKeKeranjang(p.id)}
+                  >
+                    Beli sekarang
+                  </button>
+                </div>
+              ))}
+            </div>
                   <div style={{ fontWeight: 600, fontSize: '20px', marginBottom: 4, color: '#212529' }}>{p.name}</div>
                   <div style={{ fontSize: '17px', color: '#6c757d' }}>Rp {p.price.toLocaleString('id-ID')}</div>
                   <div style={{ fontSize: '15px', color: '#212223ff', marginBottom: 8 }}>Stok: {p.stock}</div>
